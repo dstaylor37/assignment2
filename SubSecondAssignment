@@ -1,0 +1,99 @@
+
+Sub Assignment2EasyPart1()
+
+'Loop through all sheets
+'https://support.microsoft.com/en-us/help/142126/macro-to-loop-through-all-worksheets-in-a-workbook
+
+'    'declare Current as worksheet object variable
+'    Dim Current As Worksheets
+'    'loop through all of the worksheets in the active workbook
+'    For Each Current In Worksheets
+
+
+
+ ' Set an initial variable for holding the stock ticker
+ Dim Stock_Ticker As String
+
+ ' Set an initial variable for holding the total vloume per ticker symbol
+ Dim Stock_Ticker_Total As Double
+ Stock_Ticker_Total = 0
+
+ ' Keep track of the location for each stock ticker symbol in the summary table
+ Dim Summary_Table_row As Integer
+ Summary_Table_row = 2
+'create lastrow command
+    With Sheets("2016")
+   lastrow = .Range("A" & .Rows.Count).End(xlUp).Row
+ End With
+
+  With Sheets("2015")
+   lastrow = .Range("A" & .Rows.Count).End(xlUp).Row
+ End With
+
+  With Sheets("2014")
+   lastrow = .Range("A" & .Rows.Count).End(xlUp).Row
+ End With
+' lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+ ' Loop through all stock ticker symbols
+ For i = 2 To lastrow
+
+   'check if we are still within the same stock ticker symbol
+   If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+
+       'set the stock ticker name
+       Stock_Ticker = Cells(i, 1).Value
+
+       'name the Ticker cell
+       Cells(1, 12).Value = "Stock Ticker"
+
+       'add to the stock_ticker_total
+       Stock_Ticker_Total = Stock_Ticker_Total + Cells(i, 7).Value
+
+       'Name the Stock_Ticker_Total cell
+       Cells(1, 13).Value = "Total Stock Volume"
+
+      'print the stock ticker symbol in the summary table
+       Range("L" & Summary_Table_row).Value = Stock_Ticker
+
+       'print the stock ticker amount to the summary table
+       Range("M" & Summary_Table_row).Value = Stock_Ticker_Total
+
+      'add one to the summary row
+       Summary_Table_row = Summary_Table_row + 1
+
+       'reset the stock ticker total
+       Stock_Ticker_Total = 0
+
+       'if the cells immediately following a row is the same symbol...
+       Else
+           'add the symbol ticker total
+           Stock_Ticker_Total = Stock_Ticker_Total + Cells(i, 7).Value
+       End If
+
+   Next i
+'set up loop and if/then
+   For i = 2 To lastrow
+       If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+           'add each column total stock value
+           TotalStock_Vol = TotalStock_Vol + Cells(i, 7).Value
+           'enter ticker for table
+           Stock_Ticker = Cells(i, 1)
+           'display ticker
+'           Cells(Summary_Table, 9).Value = Stock_Ticker_Total
+           'display total stock for that ticker
+         '  Cells(Summary_Table, 10).Value = TotalStock_Vol
+           'add row to the table
+           Summary_Table = Summary_Table + 1
+           'reset total stock so we can count total stock again for new ticker
+           TotalStock_Vol = 0
+       Else
+       TotalStock_Vol = TotalStock_Vol + Cells(i, 7).Value
+       End If
+   Next i
+
+
+'Next for
+
+
+End Sub
